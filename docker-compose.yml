@@ -1,0 +1,69 @@
+version: "3.3"
+services:
+  nginx:
+    depends_on:
+      - client
+      - backend
+    restart: always # because it is routing traffic to our entire app
+    volumes:
+      - django_static_volume:/usr/src/app/static
+      - django_static_volume1:/usr/src/app/media
+      - react_static_volume:/usr/src/app/build/static
+    environment:
+      - DEBUG=1
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+  client:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - API_SERVER=${ENV_API_SERVER}
+    ports:
+      - "3000:3000"
+    volumes:
+      - react_static_volume:/usr/src/app/build/static # Inside the container, don't try to override this folder, just leave as is\
+    restart: on-failure
+    container_name: client
+    environment:
+      - DEBUG=1
+    env_file:
+      - .env
+    command: serve -s build -l 3000
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    container_name: backend
+    volumes:
+      - django_static_volume:/usr/src/app/static
+      - django_static_volume1:/usr/src/app/media
+    env_file:
+      - environment/backend.env
+    environment:
+      - DEBUG=1
+    command: gunicorn iwocapay.wsgi:application --bind 0.0.0.0:8000 --timeout 900
+    depends_on:
+      - db
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - DEBUG=1
+    env_file:
+      - environment/db.env
+volumes:
+  postgres_data:
+  react_static_volume:
+  django_static_volume:
+  django_static_volume1:

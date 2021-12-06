@@ -1,0 +1,62 @@
+version: 1
+formatters:
+  simple:
+    format: '[%(process)d] %(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  basic:
+    format: '%(name)s - %(message)s'
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+loggers:
+  pycrunch.pipeline.run_test_task:
+    level: INFO
+  pycrunch.runner.pipeline_dispatcher:
+    level: INFO
+  pycrunch.watchdog:
+    level: INFO
+  pycrunch.runner:
+    level: DEBUG
+  pycrunch.api.socket_handlers:
+    level: INFO
+  pycrunch.crossprocess.multiprocess_test_runner:
+    level: INFO
+  pycrunch.networking.server_protocol:
+    level: INFO
+  pycrunch.watcher:
+    level: INFO
+  watchgod:
+    level: DEBUG
+  pycrunch.api:
+    level: INFO
+  pycrunch.shared.models:
+    level: INFO
+  pycrunch.api.endpoints:
+    level: WARN
+  pycrunch.scheduling:
+    level: INFO
+  pycrunch:
+    level: DEBUG
+  sampleLogger:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+  werkzeug:
+    level: ERROR
+  engineio:
+    level: WARN
+  socketio:
+    level: WARN
+  asyncio:
+    level: WARN
+
+root:
+  level: DEBUG
+  handlers: [console]
+
+#xx    x
+#xx    x
+#xx    x
+#xx    x

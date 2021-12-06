@@ -1,0 +1,12 @@
+discovery:
+    exclusions:
+        # (example) do not search tests in 'ignored_folder' folder
+        - ignored_folder/
+        # do not search tests in 'test_ignored.py' file
+        - test_ignored.py
+engine:
+    runtime: django
+env:
+    # everything here will be passed as environment variables to the test runner
+    DJANGO_SETTINGS_MODULE: my_django_project.settings.local
+    DJANGO_ALLOW_ASYNC_UNSAFE: "true"
